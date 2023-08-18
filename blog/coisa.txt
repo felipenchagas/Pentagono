@@ -1,0 +1,3 @@
+
+DB Host	DB User	DB Pass	DB Name	Table Prefix
+localhost	penta_adminnovo	ma2112	penta_blog01	mw_

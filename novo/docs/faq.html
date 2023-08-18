@@ -1,0 +1,108 @@
+﻿<html>
+<head>
+<title>PHPMailer FAQ</title>
+<style>
+body, p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+div.width {
+  width: 500px;
+  text-align: left;
+}
+</style>
+</head>
+<body bgcolor="#FFFFFF">
+<center>
+<div class="width">
+<h2>PHPMailer FAQ</h2>
+<ul>
+
+  <li><b style="background-color: #FFFF00">Q:</b> <b>I&#039;m using the SMTP mailer and I keep on getting a timeout message
+  well before the X seconds I set it for.  What gives?</b><br />
+  <b style="background-color: #FFFF00">A:</b> PHP versions 4.0.4pl1 and earlier have a bug in which sockets timeout
+  early.  You can fix this by re-compiling PHP 4.0.4pl1 with this fix:
+  <a href="timeoutfix.diff">timeoutfix.diff</a>. Otherwise you can wait for the new PHP release.<br /><br /></li>
+
+  <li><b style="background-color: #FFFF00">Q:</b> <b>I am concerned that using include files will take up too much
+  processing time on my computer.  How can I make it run faster?</b><br />
+  <b style="background-color: #FFFF00">A:</b>  PHP by itself is very fast.  Much faster than ASP or JSP running on
+  the same type of server.  This is because it has very little overhead compared
+  to its competitors and it pre-compiles all of
+  its code before it runs each script (in PHP4).  However, all of
+  this compiling and re-compiling can take up a lot of valuable
+  computer resources.  However, there are programs out there that compile
+  PHP code and store it in memory (or on mmaped files) to reduce the
+  processing immensely.  Two of these: <a href="http://apc.communityconnect.com">APC
+  (Alternative PHP Cache)</a> and <a href="http://bwcache.bware.it/index.htm">Afterburner</a>
+  (<a href="http://www.mm4.de/php4win/mod_php4_win32/">Win32 download</a>)
+  are excellent free tools that do just this.  If you have the money
+  you might also try <a href="http://www.zend.com">Zend Cache</a>, it is
+  even faster than the open source varieties.  All of these tools make your
+  scripts run faster while also reducing the load on your server. I have tried
+  them myself and they are quite stable too.<br /><br /></li>
+
+  <li><b style="background-color: #FFFF00">Q:</b> <b>What mailer gives me the best performance?</b><br />
+  <b style="background-color: #FFFF00">A:</b> On a single machine the <b>sendmail (or Qmail)</b> is fastest overall.
+  Next fastest is mail() to give you the best performance. Both do not have the overhead of SMTP.
+  If you have you have your mail server on a another machine then
+  SMTP is your only option, but you do get the benefit of redundant mail servers.<br />
+  If you are running a mailing list with thousands of names, the fastest mailers in order are: SMTP, sendmail (or Qmail), mail().<br /><br /></li>
+
+  <li><b style="background-color: #FFFF00">Q:</b> <b>When I try to attach a file with on my server I get a
+  "Could not find {file} on filesystem error".  Why is this?</b><br />
+  <b style="background-color: #FFFF00">A:</b> If you are using a Unix machine this is probably because the user
+  running your web server does not have read access to the directory in question.  If you are using Windows,
+  then the problem probably is that you have used single backslashes to denote directories (\).
+  A single backslash has a special meaning to PHP so these are not
+  valid.  Instead use double backslashes ("\\") or a single forward
+  slash ("/").<br /><br /></li>
+
+</ul>
+
+</div>
+</center>
+
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/5bbc3abfb8198a041048bebf/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+
+
+<a href="https://api.whatsapp.com/send?phone=5541998332112&text=Olá!%20Encontrei%20seu%20site%20na%20Internet%20e%20preciso%20de%20seus%20serviços." class="float" target="_blank" onclick="goog_report_conversion('https://api.whatsapp.com/send?phone=5541998259819&text=Olá!%20Entrei%20em%20seu%20site%20e%20preciso%20de%20seus%20serviços.')">
+    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSI1MTIiIGlkPSJMYXllcl8xIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6aW5rc2NhcGU9Imh0dHA6Ly93d3cuaW5rc2NhcGUub3JnL25hbWVzcGFjZXMvaW5rc2NhcGUiIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgeG1sbnM6c29kaXBvZGk9Imh0dHA6Ly9zb2RpcG9kaS5zb3VyY2Vmb3JnZS5uZXQvRFREL3NvZGlwb2RpLTAuZHRkIiB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcyBpZD0iZGVmczEyIi8+PGcgaWQ9Imc1MTI0Ij48cmVjdCBoZWlnaHQ9IjUxMiIgaWQ9InJlY3QyOTg3IiByeD0iNjQiIHJ5PSI2NCIgc3R5bGU9ImZpbGw6IzY1YmM1NDtmaWxsLW9wYWNpdHk6MTtmaWxsLXJ1bGU6bm9uemVybztzdHJva2U6bm9uZSIgd2lkdGg9IjUxMiIgeD0iMCIgeT0iMCIvPjxwYXRoIGQ9Im0gNDU2LDI1MC44NTI2NiBjIDAsMTA3LjYwOTA0IC04Ny45MTI2LDE5NC44NDQyIC0xOTYuMzYzOTcsMTk0Ljg0NDIgLTM0LjQzMDY2LDAgLTY2Ljc3Njc3LC04LjgwMTY4IC05NC45MTk5LC0yNC4yNDE2MiBMIDU2LjAwMDAwNSw0NTYgOTEuNDM3NzQ1LDM1MS40NTU4NCBDIDczLjU1OTcxNSwzMjIuMDg4NzIgNjMuMjY1MDI1LDI4Ny42NTUyMyA2My4yNjUwMjUsMjUwLjg1MTI0IDYzLjI2NTAyNSwxNDMuMjM1MTYgMTUxLjE4MDQ5LDU2IDI1OS42MzQ2Myw1NiAzNjguMDg3NCw1Ni4wMDEgNDU2LDE0My4yMzY1NyA0NTYsMjUwLjg1MjY2IHogTSAyNTkuNjM2MDMsODcuMDMxOTYgYyAtOTEuMDQwOTIsMCAtMTY1LjA5Mzk2NSw3My40OTI0OCAtMTY1LjA5Mzk2NSwxNjMuODIwNyAwLDM1Ljg0MDU2IDExLjY4MzQ2NSw2OS4wNDE2MiAzMS40NDYwNTUsOTYuMDQ1MjkgbCAtMjAuNjIxNzcsNjAuODMxNTEgNjMuNDQyODUsLTIwLjE2NDAzIGMgMjYuMDcxMjYsMTcuMTEzMjMgNTcuMjkxOTYsMjcuMDk4MDUgOTAuODI1NDMsMjcuMDk4MDUgOTEuMDI5NjUsMCAxNjUuMDkzOTYsLTczLjQ4NTQzIDE2NS4wOTM5NiwtMTYzLjgxMjI0IDAsLTkwLjMyNjggLTc0LjA2MjkyLC0xNjMuODE5MjggLTE2NS4wOTI1NiwtMTYzLjgxOTI4IHogbSA5OS4xNTUyNiwyMDguNjg5NzIgYyAtMS4yMDk4OSwtMS45ODg3OSAtNC40MTg1LC0zLjE4NjAyIC05LjIyNDI0LC01LjU3MDYgLTQuODE3MDUsLTIuMzg3NCAtMjguNDg5NjQsLTEzLjk0NTUxIC0zMi44OTQsLTE1LjUzNDI5IC00LjQxODQ1LC0xLjU5MzAxIC03LjYzMTIyLC0yLjM5MzA0IC0xMC44MzgzOCwyLjM4NDU4IC0zLjIwNDMyLDQuNzkwMjggLTEyLjQyODU2LDE1LjUzNDI5IC0xNS4yNDI3MywxOC43MjAzMSAtMi44MDg1MywzLjE5MTY2IC01LjYwODYzLDMuNTkwMjYgLTEwLjQyNTY5LDEuMjAwMDMgLTQuODA1NzgsLTIuMzg3MzkgLTIwLjMyMTc3LC03LjQyODQgLTM4LjcwODI2LC0yMy43MDIxNSAtMTQuMzA3NDksLTEyLjY1ODE1IC0yMy45Njk3OCwtMjguMjg1NCAtMjYuNzc4MzEsLTMzLjA3MTQ3IC0yLjgwODU0LC00Ljc3OTAzIC0wLjI5NzIsLTcuMzYyMiAyLjEwOTkzLC05LjczOTc1IDIuMTY2MjYsLTIuMTQ3OTYgNC44MTQyMywtNS41ODE4NiA3LjIyNDE2LC04LjM2MzY0IDIuNDA3MTIsLTIuNzk0NDcgMy4yMDcxNSwtNC43ODE4NCA0LjgwODYxLC03Ljk2OTI2IDEuNjEyNzIsLTMuMTg4ODQgMC44MDAwMiwtNS45NzQ4NSAtMC4zOTg2LC04LjM3MDcgLTEuMjAyODYsLTIuMzgzMTcgLTEwLjgzMjc0LC0yNS44ODk1NSAtMTQuODQ0MTUsLTM1LjQ0OSAtNC4wMTEzOCwtOS41NTk0NyAtOC4wMTE1LC03Ljk2NjQ2IC0xMC44MjU2OCwtNy45NjY0NiAtMi44MDk5NiwwIC02LjAxNTY5LC0wLjQwMDAyIC05LjIyOTg3LC0wLjQwMDAyIC0zLjIwOTk3LDAgLTguNDI3MDMsMS4xOTg2NCAtMTIuODM1NjIsNS45NzM0NCAtNC40MTAwMSw0Ljc4MzI1IC0xNi44NDEzOCwxNi4zMzI5MSAtMTYuODQxMzgsMzkuODMzNjUgMCwyMy41MDQ5NyAxNy4yNDI3OSw0Ni4yMTEzMyAxOS42NTI3Myw0OS4zOTU5NCAyLjQwNDMxLDMuMTc3NTYgMzMuMjg4MzgsNTIuOTcyMSA4Mi4yMTgxMSw3Mi4xMDIyOCA0OC45NDgwMiwxOS4xMTMyOCA0OC45NDgwMiwxMi43NDQwNyA1Ny43NzM2NSwxMS45MzcgOC44MTQzNywtMC43ODczNSAyOC40Njk5MiwtMTEuNTQ0MDMgMzIuNDg4MzIsLTIyLjcwMDcyIDQuMDA4NiwtMTEuMTQ5NjQgNC4wMDg2LC0yMC43MTg5NiAyLjgxMTQsLTIyLjcwOTE3IHoiIGlkPSJXaGF0c0FwcF8yXyIgc3R5bGU9ImZpbGw6I2ZmZmZmZjtmaWxsLXJ1bGU6ZXZlbm9kZCIvPjwvZz48cGF0aCBkPSJtIDE4LjY5NTc0LDQ5My4yODc1MSBjIDExLjU2Nzk4LDExLjU2NzkgMjcuNTc2MDYsMTguNzEyNSA0NS4zMDQwNCwxOC43MTI1IGwgMzg0LjAxMjU1LC0wLjAyOSBjIDM1LjQ1NiwwIDYzLjk4NzcsLTI4LjUzMTYgNjMuOTg3NywtNjMuOTg3NTkgbCAwLC0zODMuOTgzNjg1IGMgMCwtMTcuNzI3OTggLTcuMTQ0NiwtMzMuNzM2MDMgLTE4LjcxMjYsLTQ1LjMwNDAzIEwgMTguNjk1NzQsNDkzLjI4NzUxIHoiIGlkPSJyZWN0Mjk4NC0xIiBzdHlsZT0iZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eTowLjMwMTk2MDc4O2ZpbGwtcnVsZTpub256ZXJvO3N0cm9rZTpub25lIi8+PC9zdmc+" alt="" width="60px">
+    </a>
+<div id="msg1" style="visibility: hidden">Fale conosco via WhatsApp</div>
+
+<script type="text/javascript">
+// ativa o box de mensagem
+function showIt2() {
+  document.getElementById("msg1").style.visibility = "visible";
+}
+setTimeout("showIt2()", 5000); // Depois 5 segs
+// desativa o box de mensagem
+function hiddenIt() {
+  document.getElementById("msg1").style.visibility = "hidden";
+}
+setTimeout("hiddenIt()", 15000); // Depois 15 segs
+// ativa novamente o box de mensagem
+function showIt3() {
+  document.getElementById("msg1").style.visibility = "visible";
+}
+setTimeout("showIt3()", 35000); // Depois 35 segs
+// Clique para esconder o box de mensagem
+msg1.onclick = function() {
+    document.getElementById('msg1').style.visibility = "hidden"; 
+};
+</script>
+</body>
+
+</html>

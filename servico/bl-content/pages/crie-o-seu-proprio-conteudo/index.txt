@@ -1,0 +1,1 @@
+Comece a escrever o seu próprio conteúdo ou então edite o conteúdo existente, conforme a sua necessidade. Para criar, editar ou excluir conteúdo, você precisa realizar o login no [Painel de Controle](./admin) usando o usuário `admin` e a senha que você escolheu no processo de instalação do Bludit.

@@ -1,0 +1,11 @@
+email: felipe@empresarialweb.com.br
+fullname: Felipe
+title: Mestre
+state: enabled
+access:
+  admin:
+    login: true
+    super: true
+  site:
+    login: true
+hashed_password: $2y$10$..J5nikT3jaW3FV4vuWx7.BksiOskCM.CxjGFquf9qTge12gfn6oW
