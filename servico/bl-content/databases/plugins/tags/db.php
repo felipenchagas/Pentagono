@@ -1,5 +1,0 @@
-<?php defined('BLUDIT') or die('Bludit CMS.'); ?>
-{
-    "position": 2,
-    "label": "Tags"
-}

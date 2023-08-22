@@ -1,1 +1,0 @@
-Atualize os ajustes do site pelo [Painel de Controle](./admin). Por lá é possível alterar o título, descrição e redes sociais que desejar expor no site. Para tal, entre em [Ajustes > Geral](./admin/settings-general).
