@@ -1,5 +1,3 @@
-// form-script.js
-
 document.addEventListener('DOMContentLoaded', function() {
     // --- Parte 1: Controle do Modal ---
     const modal = document.getElementById('contactModal');
@@ -14,11 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         span.addEventListener('click', function() {
             modal.style.display = "none";
+            console.log("Modal fechado."); // Para depuração
         });
 
         window.addEventListener('click', function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
+                console.log("Modal fechado ao clicar fora.");
             }
         });
     } else {
@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Parte 2: Medidas Anti-Bot ---
-
-    // Captura o momento em que o formulário foi carregado
     const form = document.getElementById('contact-form');
     if (form) {
         const formLoadedAt = Date.now();
@@ -58,6 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 event.preventDefault();
                 return;
             }
+
+            // Fecha o modal após envio bem-sucedido
+            modal.style.display = "none";
+            console.log("Formulário enviado e modal fechado.");
         });
 
         // Validações em tempo real dos campos
