@@ -116,7 +116,7 @@ body {
 
 .modal-content .input-group input:focus,
 .modal-content .input-group textarea:focus {
-  border-color: #c96c08; /* Azul no foco */
+  border-color: #233fd0; /* Azul no foco */
   box-shadow: 0 0 8px rgba(31, 111, 235, 0.5); /* Sombra azul no foco */
   outline: none;
 }
@@ -142,7 +142,7 @@ body {
 
 /* Botão de envio */
 button[type="submit"] {
-  background-color: #c96c08; /* Azul escuro */
+  background-color: #233fd0; /* Azul escuro */
   color: white;
   padding: 15px;
   width: 100%;
