@@ -60,6 +60,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Fecha o modal após envio bem-sucedido
             modal.style.display = "none";
             console.log("Formulário enviado e modal fechado.");
+
+            // Redireciona para a página de sucesso após o envio do formulário
+            window.location.href = "https://pentagonoalpinismo.com.br/sucesso"; 
         });
 
         // Validações em tempo real dos campos
