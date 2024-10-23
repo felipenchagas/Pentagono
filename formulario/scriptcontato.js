@@ -57,6 +57,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            // Disparar evento de conversão do Google Ads
+            gtag('event', 'conversion', {
+              'send_to': 'AW-XXXXXX', // Substitua pelo seu ID de conversão
+              'event_callback': function() {
+                console.log("Conversão enviada para Google Ads.");
+              }
+            });
+
             // Fecha o modal após envio bem-sucedido
             modal.style.display = "none";
             console.log("Formulário enviado e modal fechado.");
