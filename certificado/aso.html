@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ASO - Completo com PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            line-height: 1.2;
+            font-size: 10pt;
+        }
+        .container {
+            max-width: 210mm; /* Largura de uma folha A4 */
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .logo-container {
+            width: 190px;
+            height: 90px;
+            margin-right: 8px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .logo-img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .title-container {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .title-container h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .title-container h2 {
+            margin: 5px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .qr-space {
+            border: 1px dashed #999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+        }
+        .info-box,
+        .section-box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 8px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .form-label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .form-field {
+            border: none;
+            border-bottom: 1px solid #999;
+            padding: 3px;
+            flex-grow: 1;
+            margin-right: 10px;
+            font-family: Arial, sans-serif;
+        }
+        .fixed-text {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+        .form-column {
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .exams-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .exams-table td {
+            border: 1px solid #000;
+            padding: 5px;
+        }
+        .exams-table input {
+            width: 100%;
+            border: none;
+            padding: 3px;
+            font-family: Arial, sans-serif;
+        }
+        .aptness-group {
+            margin: 5px 0;
+            font-size: 10pt;
+        }
+        .checkbox-label {
+            margin-right: 15px;
+        }
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .signature-line {
+            width: 45%;
+            text-align: center;
+        }
+        .signature-field {
+            margin-top: 0;
+            padding-top: 0;
+            height: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        /* Na área de assinatura do funcionário, fica apenas o container com fundo branco e a <img> (inicialmente vazia) */
+        .signature-area {
+            height: 30px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+        }
+        .signature-img {
+            max-width: 100%;
+            max-height: 130px;
+            display: none;
+        }
+        .signature-line-bottom {
+            border-top: 1px solid #000;
+            padding-top: 3px;
+            font-size: 9pt;
+        }
+        @media print {
+            .signature-placeholder {
+                display: none !important;
+            }
+            .signature-area {
+                border: none !important;
+                height: 30px !important;
+            }
+        }
+        .footer {
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+            page-break-inside: avoid;
+            font-size: 9pt;
+        }
+        h3 {
+            margin: 5px 0;
+            font-size: 10pt;
+        }
+.no-print {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    background-color: #f9f9f9;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.no-print p {
+    text-align: left; /* Alinha o texto das instruções à esquerda */
+}
+        textarea {
+            width: 100%;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center; /* Centraliza os botões horizontalmente */
+    align-items: center;
+}
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        /* Botões extras em azul */
+        #uploadSignatureButton, #novoDocumentoButton {
+            background-color: blue;
+            color: white;
+        }
+        .file-input {
+            display: none;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            body {
+                margin: 0;
+                font-size: 9pt;
+            }
+            .container {
+                border: none;
+                padding: 5px;
+                width: 100%;
+                max-width: 210mm; /* Largura A4 */
+                max-height: 297mm; /* Altura A4 */
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+            input, textarea, select {
+                border: none;
+                font-size: 9pt;
+                padding: 1px;
+            }
+            h3 {
+                font-size: 9pt;
+                margin: 3px 0;
+            }
+            .signature-img {
+                max-height: 30px;
+            }
+            .footer {
+                font-size: 8pt;
+                margin-top: 5px;
+            }
+            .signature-line-bottom {
+                font-size: 8pt;
+            }
+            .section-box, .info-box {
+                padding: 3px;
+                margin-bottom: 5px;
+            }
+            .title-container h1 {
+                font-size: 11pt;
+            }
+            .title-container h2 {
+                font-size: 10pt;
+                margin: 1px 0;
+            }
+            .title-container p {
+                font-size: 8pt;
+                margin: 1px 0;
+            }
+            .form-group {
+                margin-bottom: 2px;
+            }
+            .aptness-group {
+                margin: 2px 0;
+            }
+            textarea {
+                height: 20px;
+            }
+            /* Forçar quebra de página a não ocorrer dentro das caixas */
+            .info-box, .section-box {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+
+    <!-- Usamos a biblioteca html2pdf.js para exportar em PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="no-print">
+        <h2>Instruções:</h2>
+        <p>
+            1. Personalize todos os campos conforme necessário<br>
+            2. Os campos do cabeçalho (logo, títulos, endereço) permanecem inalterados<br>
+            3. Utilize os botões para salvar dados, carregar dados, salvar como PDF e gerar novo documento<br>
+            4. Para adicionar a assinatura do funcionário, clique no botão azul "Adicionar Assinatura do Funcionário"<br>
+            5. As datas são atualizadas automaticamente, mas podem ser editadas se necessário.
+        </p>
+        <div class="controls">
+		            <!-- Botão para salvar em PDF -->
+            <button id="pdfButton">Salvar como PDF</button>
+            <button id="saveButton">Salvar Dados</button>
+            <button id="loadButton">Carregar Dados</button>
+            <input type="file" id="loadFile" class="file-input">
+            <!-- Botão para adicionar assinatura do funcionário -->
+            <button id="uploadSignatureButton">Adicionar Assinatura do Funcionário</button>
+            <!-- Botão para criar um novo documento (simula F5) -->
+            <button id="novoDocumentoButton">Novo Documento</button>
+            <!-- Input oculto para upload da assinatura -->
+            <input type="file" id="employee-signature-input2" class="file-input" accept="image/*">
+        </div>
+    </div>
+
+    <div class="container" id="aso-form">
+        <div class="header">
+            <div class="logo-container" id="logo-container">
+                <img src="logo.png" id="clinic-logo" class="logo-img" alt="Logo da Clínica" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
+            <div class="title-container">
+                <h1 id="titulo-principal" contenteditable="true">DEPARTAMENTO DE MEDICINA DO TRABALHO</h1>
+                <h2 id="titulo-secundario" contenteditable="true">ATESTADO DE SAÚDE OCUPACIONAL (ASO)</h2>
+                <p id="endereco-clinica" contenteditable="true">LICO MEDICINA E SEGURANCA DO TRABALHO LTDA - Avenida Brigadeiro Luís Antonio, 402 - Sala 41 - Bela Vista - 01318-000 - São Paulo - SP</p>
+                <p id="contato-clinica" contenteditable="true">Tel: (11) 91964-9772 - www.licomedicinadotrabalho.com</p>
+            </div>
+            <div class="qr-space">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=https://www.gov.br" alt="QR Code" style="display: block;">
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="form-group">
+                <span class="form-label">TIPO DE EXAME:</span>
+                <input id="tipo-exame" type="text" class="form-field" value="Admissional" style="font-weight: bold;">
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="fixed-text" style="font-size: 9pt; margin-bottom: 5px;">
+                ATESTO PARA CUMPRIMENTO DO QUE DETERMINA A NORMA REGULAMENTADORA N° 7 DA PORTARIA 6.734 DE 09 DE MARÇO DE 2020, QUE O (A)
+            </div>
+            <div class="form-group">
+                <span class="form-label">SR.(A):</span>
+                <input id="nome-funcionario" type="text" class="form-field" placeholder="Nome completo do funcionário">
+            </div>
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">CPF:</span>
+                        <input id="cpf-funcionario" type="text" class="form-field" placeholder="XXX.XXX.XXX-XX">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">R.G./C.T.P.S.:</span>
+                        <input id="rg-funcionario" type="text" class="form-field" placeholder="Número do documento">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">DATA NASC.:</span>
+                        <input id="data-nasc" type="text" class="form-field" placeholder="DD/MM/AAAA">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">IDADE:</span>
+                        <input id="idade-funcionario" type="text" class="form-field" placeholder="XX anos">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <span class="form-label">EMPRESA:</span>
+                <input id="empresa" type="text" class="form-field" placeholder="CNPJ - NOME DA EMPRESA">
+            </div>
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">SETOR:</span>
+                        <input id="setor" type="text" class="form-field" placeholder="Setor de trabalho">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">FUNÇÃO:</span>
+                        <input id="funcao" type="text" class="form-field" placeholder="Cargo do funcionário">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">TEMPO FUNÇÃO:</span>
+                        <input id="tempo-funcao" type="text" class="form-field" placeholder="Tempo na função">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">TEMPO EMPRESA:</span>
+                        <input id="tempo-empresa" type="text" class="form-field" placeholder="Tempo na empresa">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <span class="form-label">FOI SUBMETIDO À EXAME CLÍNICO EM</span>
+                <input id="data-exame" type="text" class="form-field" style="width: 100px;" placeholder="DD/MM/AAAA">
+                <span class="form-label">SENDO CONSIDERADO:</span>
+                <label class="checkbox-label">
+                    <input type="radio" name="aptness" value="apto" id="apto"> APTO
+                </label>
+                <label class="checkbox-label">
+                    <input type="radio" name="aptness" value="inapto" id="inapto"> INAPTO
+                </label>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>EXPOSTO AO RISCO:</h3>
+            <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                <tr>
+                    <td style="border: 1px solid black; width: 20%; padding: 2px;">
+                        <input type="text" style="width: 100%; border: none;" value="Químico" placeholder="Tipo de risco">
+                    </td>
+                    <td style="border: 1px solid black; width: 80%; padding: 2px;">
+                        <input type="text" style="width: 100%; border: none;" value="hidrocarbonetos aromáticos, Poeira, Sílica livre" placeholder="Descrição do risco">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 100%; border: none;" value="Físico" placeholder="Tipo de risco">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 100%; border: none;" value="Ruído" placeholder="Descrição do risco">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 100%; border: none;" value="Acidente" placeholder="Tipo de risco">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 100%; border: none;" value="Trabalho em altura" placeholder="Descrição do risco">
+                    </td>
+                </tr>
+            </table>
+
+            <h3>EXAMES COMPLEMENTARES</h3>
+            <table class="exams-table">
+                <tr>
+                    <td style="width: 20%; border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="width: 30%; border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Espirometria">
+                    </td>
+                    <td style="width: 20%; border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="width: 30%; border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Acuidade Visual">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Eletrocardiograma">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Audiometria Ocupacional">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Avaliação Psicossocial">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Eletroencefalograma">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Raio X do Tórax (PA)">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Glicemia Jejum">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Hemograma completo">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="DD/MM/AAAA">
+                    </td>
+                    <td style="border: 1px solid black; padding: 2px;">
+                        <input type="text" style="width: 95%; border: none;" value="Avaliação Clínica Ocupacional">
+                    </td>
+                </tr>
+            </table>
+
+            <h3>RECOMENDAÇÕES:</h3>
+            <textarea id="recomendacoes" rows="3" placeholder="Inserir recomendações médicas"></textarea>
+
+            <h3>TRABALHOS ESPECIAIS:</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 9pt;">
+                <tr>
+                    <td style="width: 40%; padding: 2px;">Trabalho em Altura:</td>
+                    <td style="width: 20%; padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="altura" value="apto" id="altura-apto"> APTO
+                        </label>
+                    </td>
+                    <td style="width: 20%; padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="altura" value="inapto" id="altura-inapto"> INAPTO
+                        </label>
+                    </td>
+                    <td style="width: 20%; padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="altura" value="na" id="altura-na"> N/A
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 2px;">Trabalho em Espaço Confinado:</td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="confinado" value="apto" id="confinado-apto"> APTO
+                        </label>
+                    </td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="confinado" value="inapto" id="confinado-inapto"> INAPTO
+                        </label>
+                    </td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="confinado" value="na" id="confinado-na"> N/A
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 2px;">Trabalho com Eletricidade:</td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="eletricidade" value="apto" id="eletricidade-apto"> APTO
+                        </label>
+                    </td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="eletricidade" value="inapto" id="eletricidade-inapto"> INAPTO
+                        </label>
+                    </td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="eletricidade" value="na" id="eletricidade-na"> N/A
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 2px;">Trabalho para Operações com Empilhadeiras:</td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="empilhadeiras" value="apto" id="empilhadeiras-apto"> APTO
+                        </label>
+                    </td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="empilhadeiras" value="inapto" id="empilhadeiras-inapto"> INAPTO
+                        </label>
+                    </td>
+                    <td style="padding: 2px;">
+                        <label class="checkbox-label">
+                            <input type="radio" name="empilhadeiras" value="na" id="empilhadeiras-na"> N/A
+                        </label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="info-box">
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">RECEBI CÓPIA DO(S) EXAME(S) EM:</span>
+                        <input id="data-recebimento" type="text" class="form-field" placeholder="DD/MM/AAAA">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <span class="form-label">DATA:</span>
+                        <input id="data-atual" type="text" class="form-field" placeholder="DD/MM/AAAA">
+                    </div>
+                </div>
+            </div>
+
+            <div class="signature-section">
+                <div class="signature-line">
+                    <div class="signature-field">
+                        <!-- Campo de assinatura do funcionário: fica apenas o container com fundo branco e a <img> -->
+                        <div class="signature-area" id="employee-signature-area">
+                            <img id="employee-signature-img" class="signature-img" alt="Assinatura do Funcionário">
+                        </div>
+                        <div class="signature-line-bottom">
+                            <div id="nome-funcionario-assinatura" contenteditable="true">FUNCIONÁRIO</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="signature-line">
+                    <div class="signature-field">
+                        <div class="signature-area" id="doctor-signature-area" style="border: none;">
+                            <img src="assinatura.png" style="max-width: 100%; max-height: 160px; display: block;" alt="Assinatura do Médico">
+                        </div>
+                        <div class="signature-line-bottom">
+                            <div id="nome-medico" contenteditable="true">Médico Examinador: Flávio Antônio Marcelo Narazaki</div>
+                            <div id="crm-medico" contenteditable="true">CRM 249724</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>VÁLIDO SOMENTE COM CARIMBO E ASSINATURA DO MÉDICO</strong></p>
+            <p>2ª VIA - FUNCIONÁRIO</p>
+            <p id="medico-pcmso" contenteditable="true"><strong>Médico Responsável pelo PCMSO:</strong> Dr. Flávio Antônio Marcelo Narazaki</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualiza as datas automaticamente
+            fillCurrentDates();
+            
+            // Botão para salvar dados
+            const saveBtn = document.getElementById('saveButton');
+            if (saveBtn) saveBtn.addEventListener('click', saveFormData);
+            
+            // Botão para carregar dados: ao clicar, dispara o input oculto
+            const loadBtn = document.getElementById('loadButton');
+            if (loadBtn) {
+                loadBtn.addEventListener('click', function() {
+                    document.getElementById('loadFile').click();
+                });
+                document.getElementById('loadFile').addEventListener('change', loadFormData);
+            }
+            
+            // Botão para salvar em PDF
+            const pdfBtn = document.getElementById('pdfButton');
+            if (pdfBtn) pdfBtn.addEventListener('click', savePDF);
+            
+            // Botão para adicionar assinatura do funcionário (em azul)
+            const uploadSigBtn = document.getElementById('uploadSignatureButton');
+            if (uploadSigBtn) {
+                uploadSigBtn.addEventListener('click', function() {
+                    document.getElementById('employee-signature-input2').click();
+                });
+            }
+            
+            // Botão para novo documento: recarrega a página (simulando F5)
+            const novoDocBtn = document.getElementById('novoDocumentoButton');
+            if (novoDocBtn) {
+                novoDocBtn.addEventListener('click', function() {
+                    window.location.reload();
+                });
+            }
+            
+            // Evento para processar o arquivo da assinatura (novo input)
+            const empSigInput2 = document.getElementById('employee-signature-input2');
+            if (empSigInput2) {
+                empSigInput2.addEventListener('change', loadEmployeeSignature2);
+            }
+        });
+        
+        // Função para carregar a assinatura do funcionário a partir do novo input
+        function loadEmployeeSignature2(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const signatureImg = document.getElementById('employee-signature-img');
+                    if (signatureImg) {
+                        signatureImg.src = e.target.result;
+                        signatureImg.style.display = 'block';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Atualiza os campos de data para a data de hoje (permite edição posterior)
+// Função atualizada para preencher todos os campos de data com a data atual
+function fillCurrentDates() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const currentDate = day + '/' + month + '/' + year;
+    
+    // Campos específicos de data
+    const dateFields = ['data-exame', 'data-recebimento', 'data-atual'];
+    dateFields.forEach(function(fieldId) {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.value = currentDate;
+        }
+    });
+    
+    // Preencher todas as células de data nos exames complementares
+    // Seleciona os inputs dentro da primeira e terceira coluna (colunas de data) de cada linha da tabela de exames
+    const examDateInputs = document.querySelectorAll('.exams-table td:nth-child(1) input, .exams-table td:nth-child(3) input');
+    examDateInputs.forEach(function(input) {
+        input.value = currentDate;
+    });
+}
+        
+        // Função para salvar os dados do formulário em JSON
+        function saveFormData() {
+            try {
+                const formData = collectFormData();
+                const jsonData = JSON.stringify(formData, null, 2);
+                const element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(jsonData));
+                let filename = 'aso_dados';
+                if (formData.nomeFuncionario) {
+                    filename += '_' + formData.nomeFuncionario.replace(/\s+/g, '_');
+                }
+                filename += '.txt';
+                element.setAttribute('download', filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+                alert('Dados salvos com sucesso!');
+            } catch (error) {
+                alert('Erro ao salvar os dados: ' + error.message);
+            }
+        }
+        
+        // Função para coletar os dados do formulário
+        function collectFormData() {
+            const formData = {};
+            function getValue(id, property = 'value') {
+                const element = document.getElementById(id);
+                return element ? element[property] : '';
+            }
+            formData.tituloPrincipal = getValue('titulo-principal', 'innerText');
+            formData.tituloSecundario = getValue('titulo-secundario', 'innerText');
+            formData.enderecoClinica = getValue('endereco-clinica', 'innerText');
+            formData.contatoClinica = getValue('contato-clinica', 'innerText');
+            formData.tipoExame = getValue('tipo-exame');
+            formData.nomeFuncionario = getValue('nome-funcionario');
+            formData.cpfFuncionario = getValue('cpf-funcionario');
+            formData.rgFuncionario = getValue('rg-funcionario');
+            formData.dataNasc = getValue('data-nasc');
+            formData.idadeFuncionario = getValue('idade-funcionario');
+            formData.empresa = getValue('empresa');
+            formData.setor = getValue('setor');
+            formData.funcao = getValue('funcao');
+            formData.tempoFuncao = getValue('tempo-funcao');
+            formData.tempoEmpresa = getValue('tempo-empresa');
+            formData.dataExame = getValue('data-exame');
+            formData.apto = document.getElementById('apto') ? document.getElementById('apto').checked : false;
+            formData.inapto = document.getElementById('inapto') ? document.getElementById('inapto').checked : false;
+            formData.riscos = getValue('riscos');
+            formData.recomendacoes = getValue('recomendacoes');
+            formData.exames = [];
+            for (let i = 1; i <= 6; i++) {
+                formData.exames.push({
+                    data: getValue(`exame-data-${i}`),
+                    nome: getValue(`exame-nome-${i}`)
+                });
+            }
+            function getRadioStatus(name) {
+                return {
+                    apto: document.getElementById(`${name}-apto`) ? document.getElementById(`${name}-apto`).checked : false,
+                    inapto: document.getElementById(`${name}-inapto`) ? document.getElementById(`${name}-inapto`).checked : false,
+                    na: document.getElementById(`${name}-na`) ? document.getElementById(`${name}-na`).checked : false
+                };
+            }
+            const altura = getRadioStatus('altura');
+            formData.alturaApto = altura.apto;
+            formData.alturaInapto = altura.inapto;
+            formData.alturaNa = altura.na;
+            const confinado = getRadioStatus('confinado');
+            formData.confinadoApto = confinado.apto;
+            formData.confinadoInapto = confinado.inapto;
+            formData.confinadoNa = confinado.na;
+            const eletricidade = getRadioStatus('eletricidade');
+            formData.eletricidadeApto = eletricidade.apto;
+            formData.eletricidadeInapto = eletricidade.inapto;
+            formData.eletricidadeNa = eletricidade.na;
+            const empilhadeiras = getRadioStatus('empilhadeiras');
+            formData.empilhadeirasApto = empilhadeiras.apto;
+            formData.empilhadeirasInapto = empilhadeiras.inapto;
+            formData.empilhadeirasNa = empilhadeiras.na;
+            formData.dataRecebimento = getValue('data-recebimento');
+            formData.dataAtual = getValue('data-atual');
+            formData.nomeMedico = getValue('nome-medico', 'innerText');
+            formData.crmMedico = getValue('crm-medico', 'innerText');
+            formData.medicoPcmso = getValue('medico-pcmso', 'innerText');
+            formData.nomeFuncionarioAssinatura = getValue('nome-funcionario-assinatura', 'innerText');
+            const clinicLogo = document.getElementById('clinic-logo');
+            if (clinicLogo && clinicLogo.src && clinicLogo.style.display !== 'none') {
+                formData.logoClinica = clinicLogo.src;
+            }
+            const employeeSignature = document.getElementById('employee-signature-img');
+            if (employeeSignature && employeeSignature.src && employeeSignature.style.display !== 'none') {
+                formData.assinaturaFuncionario = employeeSignature.src;
+            }
+            const doctorSignature = document.getElementById('doctor-signature-img');
+            if (doctorSignature && doctorSignature.src && doctorSignature.style.display !== 'none') {
+                formData.assinaturaMedico = doctorSignature.src;
+            }
+            return formData;
+        }
+        
+        // Função para carregar os dados do formulário a partir de um arquivo
+        function loadFormData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const formData = JSON.parse(e.target.result);
+                    fillFormWithData(formData);
+                    alert('Dados carregados com sucesso!');
+                } catch (error) {
+                    alert('Erro ao carregar o arquivo: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // Função para preencher o formulário com os dados carregados
+        function fillFormWithData(formData) {
+            function setValue(id, value, property = 'value') {
+                const element = document.getElementById(id);
+                if (element && value !== undefined) {
+                    element[property] = value;
+                }
+            }
+            setValue('titulo-principal', formData.tituloPrincipal, 'innerText');
+            setValue('titulo-secundario', formData.tituloSecundario, 'innerText');
+            setValue('endereco-clinica', formData.enderecoClinica, 'innerText');
+            setValue('contato-clinica', formData.contatoClinica, 'innerText');
+            setValue('tipo-exame', formData.tipoExame);
+            setValue('nome-funcionario', formData.nomeFuncionario);
+            setValue('cpf-funcionario', formData.cpfFuncionario);
+            setValue('rg-funcionario', formData.rgFuncionario);
+            setValue('data-nasc', formData.dataNasc);
+            setValue('idade-funcionario', formData.idadeFuncionario);
+            setValue('empresa', formData.empresa);
+            setValue('setor', formData.setor);
+            setValue('funcao', formData.funcao);
+            setValue('tempo-funcao', formData.tempoFuncao);
+            setValue('tempo-empresa', formData.tempoEmpresa);
+            setValue('data-exame', formData.dataExame);
+            if (formData.apto) {
+                const apto = document.getElementById('apto');
+                if (apto) apto.checked = true;
+            }
+            if (formData.inapto) {
+                const inapto = document.getElementById('inapto');
+                if (inapto) inapto.checked = true;
+            }
+            setValue('riscos', formData.riscos);
+            setValue('recomendacoes', formData.recomendacoes);
+            if (formData.exames && formData.exames.length >= 6) {
+                for (let i = 1; i <= 6; i++) {
+                    setValue(`exame-data-${i}`, formData.exames[i-1].data);
+                    setValue(`exame-nome-${i}`, formData.exames[i-1].nome);
+                }
+            }
+            function setRadioStatus(name, status) {
+                if (status.apto) {
+                    const apto = document.getElementById(`${name}-apto`);
+                    if (apto) apto.checked = true;
+                }
+                if (status.inapto) {
+                    const inapto = document.getElementById(`${name}-inapto`);
+                    if (inapto) inapto.checked = true;
+                }
+                if (status.na) {
+                    const na = document.getElementById(`${name}-na`);
+                    if (na) na.checked = true;
+                }
+            }
+            setRadioStatus('altura', {
+                apto: formData.alturaApto,
+                inapto: formData.alturaInapto,
+                na: formData.alturaNa
+            });
+            setRadioStatus('confinado', {
+                apto: formData.confinadoApto,
+                inapto: formData.confinadoInapto,
+                na: formData.confinadoNa
+            });
+            setRadioStatus('eletricidade', {
+                apto: formData.eletricidadeApto,
+                inapto: formData.eletricidadeInapto,
+                na: formData.eletricidadeNa
+            });
+            setRadioStatus('empilhadeiras', {
+                apto: formData.empilhadeirasApto,
+                inapto: formData.empilhadeirasInapto,
+                na: formData.empilhadeirasNa
+            });
+            setValue('data-recebimento', formData.dataRecebimento);
+            setValue('data-atual', formData.dataAtual);
+            setValue('nome-medico', formData.nomeMedico, 'innerText');
+            setValue('crm-medico', formData.crmMedico, 'innerText');
+            setValue('medico-pcmso', formData.medicoPcmso, 'innerText');
+            setValue('nome-funcionario-assinatura', formData.nomeFuncionarioAssinatura, 'innerText');
+            if (formData.logoClinica && formData.logoClinica.startsWith('data:')) {
+                const logoImg = document.getElementById('clinic-logo');
+                if (logoImg) {
+                    logoImg.src = formData.logoClinica;
+                    logoImg.style.display = 'block';
+                    const placeholder = document.getElementById('logo-placeholder');
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                    }
+                }
+            }
+            if (formData.assinaturaFuncionario && formData.assinaturaFuncionario.startsWith('data:')) {
+                const signatureImg = document.getElementById('employee-signature-img');
+                if (signatureImg) {
+                    signatureImg.src = formData.assinaturaFuncionario;
+                    signatureImg.style.display = 'block';
+                }
+            }
+            if (formData.assinaturaMedico && formData.assinaturaMedico.startsWith('data:')) {
+                const signatureImg = document.getElementById('doctor-signature-img');
+                if (signatureImg) {
+                    signatureImg.src = formData.assinaturaMedico;
+                    signatureImg.style.display = 'block';
+                }
+            }
+        }
+
+// Função melhorada para salvar o conteúdo em PDF com uma única página A4
+function savePDF() {
+    // Seleciona o formulário
+    const element = document.getElementById('aso-form');
+    if (!element) {
+        console.error("Elemento #aso-form não encontrado!");
+        return;
+    }
+    
+    // Configura para aplicar os estilos de impressão
+    const opt = {
+        margin: [5, 5, 5, 5], // pequenas margens em mm [topo, direita, baixo, esquerda]
+        filename: 'aso.pdf',
+        image: { type: 'jpeg', quality: 0.98 }, // JPEG para melhor compressão
+        html2canvas: { 
+            scale: 2, // escala moderada, equilibrando qualidade e performance
+            useCORS: true,
+            logging: false,
+            // Remova as propriedades de largura/altura para permitir o cálculo automático
+        },
+        jsPDF: { 
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait',
+            compress: true
+        },
+        // Esta configuração força tudo em uma única página
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    // Use esta abordagem para aplicar os estilos de impressão
+    const originalDisplayStyle = element.style.display;
+    element.style.display = 'block';
+    
+    // Adiciona estilos temporários via classe
+    const tempClass = 'preparing-pdf-print';
+    element.classList.add(tempClass);
+    
+    // Cria um estilo temporário para simular ambiente de impressão
+    const tempStyle = document.createElement('style');
+    tempStyle.textContent = `
+        .${tempClass} {
+            width: 210mm !important;
+            max-width: 210mm !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none !important;
+            box-sizing: border-box !important;
+            font-size: 9pt !important;
+        }
+        .${tempClass} .info-box, 
+        .${tempClass} .section-box {
+            padding: 3px !important;
+            margin-bottom: 5px !important;
+            page-break-inside: avoid !important;
+        }
+        .${tempClass} .title-container h1 {
+            font-size: 11pt !important;
+        }
+        .${tempClass} .title-container h2 {
+            font-size: 10pt !important;
+            margin: 1px 0 !important;
+        }
+        .${tempClass} textarea {
+            height: 20px !important;
+        }
+        .${tempClass} .form-group {
+            margin-bottom: 2px !important;
+        }
+    `;
+    document.head.appendChild(tempStyle);
+    
+    // Garante que os elementos não-imprimíveis estão escondidos
+    const noPrintElements = document.querySelectorAll('.no-print');
+    const noPrintStates = Array.from(noPrintElements).map(el => el.style.display);
+    noPrintElements.forEach(el => el.style.display = 'none');
+
+    // Gera o PDF
+    html2pdf()
+        .set(opt)
+        .from(element)
+        .save()
+        .then(() => {
+            // Restaura o elemento ao estado original
+            element.style.display = originalDisplayStyle;
+            element.classList.remove(tempClass);
+            document.head.removeChild(tempStyle);
+            
+            // Restaura a visibilidade dos elementos não-imprimíveis
+            noPrintElements.forEach((el, index) => {
+                el.style.display = noPrintStates[index];
+            });
+        })
+        .catch(err => {
+            console.error('Erro ao gerar PDF:', err);
+            // Restaura o elemento mesmo em caso de erro
+            element.style.display = originalDisplayStyle;
+            element.classList.remove(tempClass);
+            document.head.removeChild(tempStyle);
+            
+            // Restaura a visibilidade dos elementos não-imprimíveis
+            noPrintElements.forEach((el, index) => {
+                el.style.display = noPrintStates[index];
+            });
+        });
+}
+        
+        // Função para criar um novo documento (simula F5 recarregando a página)
+        function novoDocumento() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
