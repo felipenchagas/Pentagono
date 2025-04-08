@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <title>Certificado - Assinaturas Flutuantes + Marca d'Água</title>
 
-  <!-- IMPORTANTE: bibliotecas para geração de PDF -->
+  <!-- Bibliotecas para geração de PDF (ordem importa!) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -20,7 +20,7 @@
       --dark-text: #333;
     }
 
-    /* Forçar A4 Paisagem */
+    /* Forçar A4 paisagem */
     @page {
       size: A4 landscape;
       margin: 0;
@@ -33,7 +33,7 @@
       -webkit-print-color-adjust: exact;
     }
 
-    /* Botões de controle (não aparecem na impressão) */
+    /* Botões de controle */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -60,7 +60,7 @@
       display: none;
     }
 
-    /* Container de cada página (A4 ~ 842x595 px) */
+    /* Container de cada página A4 (842×595) */
     .page {
       width: 842px; 
       height: 595px;
@@ -74,7 +74,6 @@
       flex-direction: column;
     }
 
-    /* Impedir margens na impressão */
     @media print {
       .controls { display: none !important; }
       .page {
@@ -84,18 +83,20 @@
       }
     }
 
-    /* Fundo e moldura */
+    /* Fundo (radiais) + moldura */
     .bg-pattern {
-      position: absolute;
+      position: absolute; 
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: #fff; 
+      background: #fff;
       z-index: 0;
     }
     .bg-shape-1 {
       position: absolute;
-      top: -100px; left: -100px;
-      width: 300px; height: 300px;
+      top: -100px; 
+      left: -100px;
+      width: 300px; 
+      height: 300px;
       border-radius: 50%;
       background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
       opacity: 0.2;
@@ -103,15 +104,17 @@
     }
     .bg-shape-2 {
       position: absolute;
-      bottom: -120px; right: -120px;
-      width: 350px; height: 350px;
+      bottom: -120px; 
+      right: -120px;
+      width: 350px; 
+      height: 350px;
       border-radius: 50%;
       background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
       opacity: 0.2;
       z-index: 1;
     }
     .border-frame {
-      position: absolute;
+      position: absolute; 
       top: 15px; left: 15px; right: 15px; bottom: 15px;
       border: 2px solid rgba(83,99,212,0.2);
       border-radius: 8px;
@@ -122,7 +125,7 @@
       border-style: dashed;
     }
 
-    /* Marca d'água no meio da primeira página */
+    /* Marca d'água no meio da página */
     .watermark {
       position: absolute;
       top: 50%; left: 50%;
@@ -130,7 +133,7 @@
       width: 300px;
       opacity: 0.1;
       pointer-events: none;
-      z-index: 2; /* acima do shape, abaixo do texto */
+      z-index: 2; 
     }
 
     /* =========== FRENTE =========== */
@@ -142,19 +145,16 @@
       z-index: 3;
       padding: 30px 50px;
     }
+
     .front-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 15px;
     }
-
-    /* Logo => "logo.png" fixo + possivel override via "Alterar Logo" */
     .logo-container {
-      width: 70px; height: 70px;
-      border-radius: 50%;
+      height: 70px;
       overflow: hidden;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     }
     .logo-img {
       width: 100%; 
@@ -162,6 +162,7 @@
       object-fit: cover;
     }
 
+    /* Campo top p/ nº cert => REPLICA no meio */
     .cert-number {
       background: linear-gradient(135deg, var(--medium-blue), var(--dark-blue));
       color: #fff;
@@ -183,7 +184,7 @@
     }
 
     .front-title {
-      text-align: center;
+      text-align: center; 
       margin-bottom: 10px;
     }
     .front-title h1 {
@@ -211,8 +212,6 @@
       text-align: center;
       margin-bottom: 8px;
     }
-
-    /* Aluno (ao editar, replica no campo Aluno da assinatura) */
     .front-recipient {
       font-size: 26px;
       font-weight: 700;
@@ -228,13 +227,14 @@
       font-size: 20px;
       margin: 0 6px;
     }
-
     .front-document-info {
       text-align: center;
       font-size: 14px;
       margin-bottom: 20px;
       color: #666;
     }
+
+    /* Data de emissao (id=diaEmissao) => auto. Cert. middle => id=certNumberMid => auto. */
     .front-course-info {
       font-size: 16px;
       margin: 0 auto 20px;
@@ -257,24 +257,24 @@
       margin-bottom: 25px;
     }
 
-    /* Assinaturas do frente => Formando / Instrutor flutuando */
+    /* Assinaturas => flutuando */
     .front-signatures {
       display: flex;
       justify-content: space-around;
-      margin-top: auto;
+      margin-top: auto; 
       gap: 30px;
     }
     .signature {
       position: relative; /* p/ posicionar a imagem absoluta */
       width: 40%;
       display: flex;
-      flex-direction: column;
+      flex-direction: column; 
       align-items: center;
     }
     .sign-image {
-      display: none; /* se sem upload */
+      display: none; 
       position: absolute;
-      bottom: 35px;  /* valor maior p/ ficar mais acima da linha */
+      bottom: 35px; /* valor maior p/ ficar mais acima da linha */
       left: 50%;
       transform: translateX(-50%);
       max-width: 200px;
@@ -282,38 +282,38 @@
       z-index: 1;
     }
     .sign-line {
-      width: 100%;
+      width: 100%; 
       height: 1px;
       background-color: rgba(51,51,51,0.5);
       margin-bottom: 5px;
-      position: relative;
+      position: relative; 
       z-index: 0;
     }
     .signer-name {
-      font-weight: 600;
-      font-size: 14px;
+      font-weight: 600; 
+      font-size: 14px; 
       color: var(--dark-blue);
     }
     .signer-title {
-      font-size: 12px;
+      font-size: 12px; 
       color: var(--medium-blue);
     }
     .signer-details {
-      font-size: 11px;
+      font-size: 11px; 
       color: rgba(51,51,51,0.7);
-      text-align: center;
+      text-align: center; 
       max-width: 90%;
     }
 
     /* ============ VERSO ============ */
     .back-content {
-      flex: 1;
+      flex: 1; 
       display: flex;
       flex-direction: column;
       position: relative;
       z-index: 3;
       padding: 20px 40px;
-      font-size: 10px; /* tudo 10px */
+      font-size: 10px; 
     }
     .back-header {
       text-align: center;
@@ -354,6 +354,7 @@
     .back-table td ul li {
       margin-bottom: 2px;
     }
+
     .back-footer {
       margin-top: auto;
       display: flex;
@@ -373,8 +374,7 @@
       align-items: flex-end;
     }
     .back-sign-line {
-      width: 220px; 
-      height: 1px;
+      width: 220px; height: 1px;
       background-color: rgba(51,51,51,0.5);
       margin-bottom: 3px;
     }
@@ -385,7 +385,7 @@
     }
     .back-position,
     .back-id {
-      font-weight: 400;
+      font-weight: 400; 
       color: rgba(51,51,51,0.7);
     }
 
@@ -445,7 +445,8 @@
             alt="Logo"
           />
         </div>
-        <div class="cert-number" contenteditable="true">Nº 359 PR</div>
+        <!-- Campo top p/ nº do certificado => replica no meio (id=certNumber) -->
+        <div class="cert-number" id="certNumber" contenteditable="true">Nº 359 PR</div>
       </div>
       
       <!-- Título -->
@@ -468,10 +469,14 @@
         <span class="highlight" contenteditable="true">NR 35 Trabalhos em Altura</span>
         com carga horária de 
         <span class="highlight" contenteditable="true">08 horas</span>.<br/><br/>
+        
+        <!-- Data auto (diaEmissao) -->
         Data de emissão:
-        <span class="highlight" contenteditable="true">04/08/2014</span>.<br/>
+        <span class="highlight" id="diaEmissao"></span>.<br/>
+
+        <!-- Nº do certificado do meio => replicado de certNumber -->
         Certificado:
-        <span class="highlight" contenteditable="true">Nº 359 PR</span>
+        <span class="highlight" id="certNumberMid">Nº 359 PR</span>
       </div>
       <div class="front-validity-note" contenteditable="true">
         Validade de 1 ano. Sujeito a reciclagem.
@@ -490,7 +495,6 @@
             id="alunoSignatureName" 
             contenteditable="true"
           >Aluno</div>
-
           <div class="signer-title" contenteditable="true">---</div>
           <div class="signer-details" contenteditable="true">---</div>
         </div>
@@ -659,11 +663,16 @@
   </div>
 
   <script>
-    /* LOGO => "logo.png" por padrão */
+    // Ao carregar a página, definimos a data de emissão p/ hoje (dd/mm/aaaa)
+    window.addEventListener('DOMContentLoaded', () => {
+      const hoje = new Date().toLocaleDateString('pt-BR');
+      document.getElementById('diaEmissao').textContent = hoje;
+    });
+
+    // Logo => "logo.png" por padrão
     const logoButton = document.getElementById('logoButton');
     const logoInput = document.getElementById('logoInput');
     const logoImg = document.getElementById('logo-img');
-
     logoButton.addEventListener('click', () => {
       logoInput.click();
     });
@@ -677,19 +686,24 @@
       reader.readAsDataURL(file);
     });
 
-    /* Nome do aluno: replicar p/ assinatura do aluno */
+    // Nome do aluno => replicar p/ assinatura
     const frontRecipient = document.getElementById('frontRecipient');
     const alunoSignatureName = document.getElementById('alunoSignatureName');
     frontRecipient.addEventListener('input', () => {
-      // Se editar o frontRecipient, atualiza o campo de assinatura do aluno
       alunoSignatureName.textContent = frontRecipient.textContent;
     });
 
-    /* Assinatura do Formando => signFormandoImg flutuando */
+    // Nº do cert => replicar p/ campo do meio
+    const certNumberTop = document.getElementById('certNumber');
+    const certNumberMid = document.getElementById('certNumberMid');
+    certNumberTop.addEventListener('input', () => {
+      certNumberMid.textContent = certNumberTop.textContent;
+    });
+
+    // Assinatura do Formando => signFormandoImg flutuando
     const signFormandoButton = document.getElementById('signFormandoButton');
     const signFormandoInput = document.getElementById('signFormandoInput');
     const signFormandoImg = document.getElementById('signFormandoImg');
-
     signFormandoButton.addEventListener('click', () => {
       signFormandoInput.click();
     });
@@ -704,11 +718,10 @@
       reader.readAsDataURL(file);
     });
 
-    /* Assinatura do Instrutor => signInstrutorImg flutuando */
+    // Assinatura do Instrutor => signInstrutorImg flutuando
     const signInstrutorButton = document.getElementById('signInstrutorButton');
     const signInstrutorInput = document.getElementById('signInstrutorInput');
     const signInstrutorImg = document.getElementById('signInstrutorImg');
-
     signInstrutorButton.addEventListener('click', () => {
       signInstrutorInput.click();
     });
@@ -723,7 +736,7 @@
       reader.readAsDataURL(file);
     });
 
-    /* Selecionar texto todo ao focar */
+    // Selecionar texto todo ao focar
     document.querySelectorAll('[contenteditable="true"]').forEach(el => {
       el.addEventListener('focus', () => {
         const range = document.createRange();
@@ -734,7 +747,7 @@
       });
     });
 
-    /* Gerar PDF (frente + verso) */
+    // Geração de PDF (frente + verso)
     const pdfButton = document.getElementById('pdfButton');
     pdfButton.addEventListener('click', async () => {
       const { jsPDF } = window.jspdf;
