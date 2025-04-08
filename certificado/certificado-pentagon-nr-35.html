@@ -1,445 +1,450 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <title>Certificado - Assinaturas Flutuantes + Marca d'Água + Responsável Técnico</title>
 
-  <!-- Bibliotecas p/ PDF -->
+  <!-- Bibliotecas para geração de PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <!-- Fontes Google -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
-    :root {
-      --dark-blue: #1b2567;
-      --medium-blue: #314199;
-      --accent: #5363d4;
-      --gold: #d4af37;
-      --dark-text: #333;
-    }
+:root {
+  --dark-blue: #1b2567;
+  --medium-blue: #314199;
+  --accent: #5363d4;
+  --gold: #d4af37;
+  --dark-text: #333;
+}
 
-    /* Forçar A4 paisagem */
-    @page {
-      size: A4 landscape;
-      margin: 0;
-    }
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #f0f0f0;
-      font-family: 'Montserrat', sans-serif;
-      -webkit-print-color-adjust: exact;
-    }
+/* Forçar A4 Paisagem */
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #f0f0f0;
+  font-family: 'Montserrat', sans-serif;
+  -webkit-print-color-adjust: exact;
+}
 
-    /* Botões de controle */
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 20px;
-    }
-    .btn {
-      padding: 10px 18px;
-      border: none;
-      border-radius: 20px;
-      background: linear-gradient(135deg, var(--medium-blue), var(--dark-blue));
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 4px 10px rgba(27,37,103,0.2);
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(27,37,103,0.3);
-    }
-    .file-input {
-      display: none;
-    }
+/* Botões de controle */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px;
+}
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--medium-blue), var(--dark-blue));
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(27,37,103,0.2);
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(27,37,103,0.3);
+}
+.file-input {
+  display: none;
+}
 
-    /* Container de cada página (sem overflow hidden) */
-    .page {
-      width: 842px;
-      height: 595px;
-      margin: 0 auto 30px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      /* REMOVIDO overflow: hidden; para permitir arrastar livremente */
-    }
+/* Página A4 Paisagem (842 x 595) */
+.page {
+  width: 842px;
+  height: 595px;
+  margin: 0 auto 30px;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
 
-    /* Impressão */
-    @media print {
-      .controls { display: none !important; }
-      .page {
-        margin: 0;
-        box-shadow: none;
-        border-radius: 0;
-      }
-    }
+@media print {
+  .controls { display: none !important; }
+  .page {
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
+}
 
-    /* Fundo e moldura */
-    .bg-pattern {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #fff;
-      z-index: 0;
-    }
-    .bg-shape-1 {
-      position: absolute;
-      top: -100px; left: -100px;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
-      opacity: 0.2;
-      z-index: 1;
-    }
-    .bg-shape-2 {
-      position: absolute;
-      bottom: -120px; right: -120px;
-      width: 350px; height: 350px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
-      opacity: 0.2;
-      z-index: 1;
-    }
-    .border-frame {
-      position: absolute;
-      top: 15px; left: 15px; right: 15px; bottom: 15px;
-      border: 2px solid rgba(83,99,212,0.2);
-      border-radius: 8px;
-      pointer-events: none;
-      z-index: 2;
-    }
-    .border-frame.dashed {
-      border-style: dashed;
-    }
+/* Fundo e moldura */
+.bg-pattern {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #fff;
+  z-index: 0;
+}
+.bg-shape-1 {
+  position: absolute;
+  top: -100px; left: -100px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
+  opacity: 0.2;
+  z-index: 1;
+}
+.bg-shape-2 {
+  position: absolute;
+  bottom: -120px; right: -120px;
+  width: 350px; height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
+  opacity: 0.2;
+  z-index: 1;
+}
+.border-frame {
+  position: absolute;
+  top: 15px; left: 15px; right: 15px; bottom: 15px;
+  border: 2px solid rgba(83,99,212,0.2);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 2;
+}
+.border-frame.dashed {
+  border-style: dashed;
+}
 
-    /* Marca d’água */
-    .watermark {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 300px;
-      opacity: 0.1;
-      pointer-events: none;
-      z-index: 2;
-    }
+/* Marca d'água */
+.watermark {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 2;
+}
 
-    /* ---------- FRENTE ---------- */
-    .front-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 3;
-      padding: 30px 50px;
-    }
-    .front-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 15px;
-    }
-    .logo-container {
-      height: 70px; 
-      overflow: hidden;
-    }
-    .logo-img {
-      width: 100%; 
-      height: 100%;
-      object-fit: cover;
-    }
+/* ------------ FRENTE ------------ */
+.front-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 3;
+  padding: 30px 50px;
+}
+.front-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
 
-    .cert-number {
-      background: linear-gradient(135deg, var(--medium-blue), var(--dark-blue));
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 14px;
-      min-width: 100px;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(27,37,103,0.2);
-    }
-    .cert-number::before {
-      content: '';
-      display: inline-block;
-      width: 6px; height: 6px;
-      background-color: rgba(255,255,255,0.7);
-      border-radius: 50%;
-      margin-right: 5px;
-    }
+.logo-container {
+  height: 70px;
+  overflow: hidden;
+}
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-    .front-title {
-      text-align: center; 
-      margin-bottom: 10px;
-    }
-    .front-title h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 42px;
-      font-weight: 700;
-      color: var(--dark-blue);
-      margin: 0;
-      position: relative;
-      display: inline-block;
-      text-transform: uppercase;
-    }
-    .front-title h1::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    }
+/* Nº do certificado (top) => REPLICA no meio */
+.cert-number {
+  background: linear-gradient(135deg, var(--medium-blue), var(--dark-blue));
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(27,37,103,0.2);
+}
+.cert-number::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  background-color: rgba(255,255,255,0.7);
+  border-radius: 50%;
+  margin-right: 5px;
+}
 
-    .front-intro {
-      font-family: 'Dancing Script', cursive;
-      font-size: 24px;
-      color: var(--dark-blue);
-      text-align: center;
-      margin-bottom: 8px;
-    }
-    .front-recipient {
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--medium-blue);
-      text-align: center;
-      margin: 4px 0 10px;
-      position: relative;
-    }
-    .front-recipient::before,
-    .front-recipient::after {
-      content: '•';
-      color: var(--gold);
-      font-size: 20px;
-      margin: 0 6px;
-    }
-    .front-document-info {
-      text-align: center;
-      font-size: 14px;
-      margin-bottom: 20px;
-      color: #666;
-    }
-    .front-course-info {
-      font-size: 16px;
-      margin: 0 auto 20px;
-      max-width: 600px;
-      text-align: center;
-      line-height: 1.4;
-      color: var(--dark-blue);
-    }
-    .front-course-info .highlight {
-      font-weight: 600;
-      color: var(--medium-blue);
-      border-bottom: 1px dotted rgba(49,65,153,0.3);
-      margin: 0 2px;
-    }
-    .front-validity-note {
-      font-size: 13px;
-      color: rgba(51,51,51,0.7);
-      font-style: italic;
-      text-align: center;
-      margin-bottom: 25px;
-    }
+.front-title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.front-title h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--dark-blue);
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  text-transform: uppercase;
+}
+.front-title h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
 
-    /* Assinaturas flutuantes (Formando + Instrutor) */
-    .front-signatures {
-      display: flex;
-      justify-content: space-around;
-      margin-top: auto;
-      gap: 30px;
-    }
-    .signature {
-      position: relative; 
-      width: 40%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .sign-image {
-      display: none;
-      position: absolute;
-      left: 50%;
-      top: 0;         /* Em vez de bottom, para não sumir ao clicar */
-      transform: translate(-50%, -10px); /* Ajuste vertical */
-      max-width: 200px;
-      max-height: 80px;
-      cursor: move; /* arrastável */
-      z-index: 10;
-    }
-    .sign-line {
-      width: 100%;
-      height: 1px;
-      background-color: rgba(51,51,51,0.5);
-      margin-bottom: 5px;
-      position: relative; 
-      z-index: 0;
-    }
-    .signer-name {
-      font-weight: 600; 
-      font-size: 14px; 
-      color: var(--dark-blue);
-    }
-    .signer-title {
-      font-size: 12px; 
-      color: var(--medium-blue);
-    }
-    .signer-details {
-      font-size: 11px; 
-      color: rgba(51,51,51,0.7);
-      text-align: center; 
-      max-width: 90%;
-    }
+.front-intro {
+  font-family: 'Dancing Script', cursive;
+  font-size: 24px;
+  color: var(--dark-blue);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.front-recipient {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--medium-blue);
+  text-align: center;
+  margin: 4px 0 10px;
+  position: relative;
+}
+.front-recipient::before,
+.front-recipient::after {
+  content: '•';
+  color: var(--gold);
+  font-size: 20px;
+  margin: 0 6px;
+}
+.front-document-info {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: #666;
+}
 
-    /* ---------- VERSO ---------- */
-    .back-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      z-index: 3;
-      padding: 20px 40px;
-      font-size: 10px;
-    }
-    .back-header {
-      text-align: center;
-      margin-bottom: 8px;
-    }
-    .back-header .back-title {
-      font-weight: 700;
-      color: var(--dark-blue);
-      margin: 2px 0;
-      font-size: 12px;
-      text-transform: uppercase;
-    }
-    .back-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 10px;
-      font-size: 10px;
-    }
-    .back-table, .back-table th, .back-table td {
-      border: 1px solid #e0e0e0;
-    }
-    .back-table th {
-      background-color: rgba(83,99,212,0.1);
-      color: var(--dark-blue);
-      font-weight: 600;
-      text-align: left;
-      padding: 4px 6px;
-    }
-    .back-table td {
-      padding: 3px 6px;
-      vertical-align: top;
-    }
-    .back-table td ul {
-      list-style: none;
-      margin: 0; 
-      padding: 0;
-    }
-    .back-table td ul li {
-      margin-bottom: 2px;
-    }
+/* Data "diaEmissao" e "certNumberMid" no meio */
+.front-course-info {
+  font-size: 16px;
+  margin: 0 auto 20px;
+  max-width: 600px;
+  text-align: center;
+  line-height: 1.4;
+  color: var(--dark-blue);
+}
+.front-course-info .highlight {
+  font-weight: 600;
+  color: var(--medium-blue);
+  border-bottom: 1px dotted rgba(49,65,153,0.3);
+  margin: 0 2px;
+}
+.front-validity-note {
+  font-size: 13px;
+  color: rgba(51,51,51,0.7);
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 25px;
+}
 
-    .back-footer {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      position: relative;
-    }
-    .footer-left {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px;
-    }
-    .footer-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 2px;
-    }
+/* Assinaturas flutuantes + arrastáveis */
+.front-signatures {
+  display: flex;
+  justify-content: space-around;
+  margin-top: auto;
+  gap: 30px;
+}
+.signature {
+  position: relative;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.sign-image {
+  display: none;
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 200px;
+  max-height: 90px;
+  cursor: move;  /* apontar que é arrastável */
+  z-index: 10;
+}
+.sign-line {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(51,51,51,0.5);
+  margin-bottom: 5px;
+  position: relative;
+  z-index: 0;
+}
+.signer-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--dark-blue);
+}
+.signer-title {
+  font-size: 12px;
+  color: var(--medium-blue);
+}
+.signer-details {
+  font-size: 11px;
+  color: rgba(51,51,51,0.7);
+  text-align: center;
+  max-width: 90%;
+}
 
-    .back-sign-line {
-      width: 220px; height: 1px;
-      background-color: rgba(51,51,51,0.5);
-      margin-bottom: 3px;
-    }
+/* =========== VERSO =========== */
+.back-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 3;
+  padding: 20px 40px;
+  font-size: 10px;
+}
+.back-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+.back-header .back-title {
+  font-weight: 700;
+  color: var(--dark-blue);
+  margin: 2px 0;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.back-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  font-size: 10px;
+}
+.back-table, .back-table th, .back-table td {
+  border: 1px solid #e0e0e0;
+}
+.back-table th {
+  background-color: rgba(83,99,212,0.1);
+  color: var(--dark-blue);
+  font-weight: 600;
+  text-align: left;
+  padding: 4px 6px;
+}
+.back-table td {
+  padding: 3px 6px;
+  vertical-align: top;
+}
+.back-table td ul {
+  list-style: none;
+  margin: 0; 
+  padding: 0;
+}
+.back-table td ul li {
+  margin-bottom: 2px;
+}
+.back-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: relative;
+}
+.back-footer .footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+.back-footer .footer-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+  position: relative;
+}
 
-    .back-responsible {
-      font-weight: 600;
-      color: var(--dark-blue);
-      text-align: right;
-    }
-    .back-position,
-    .back-id {
-      font-weight: 400; 
-      color: rgba(51,51,51,0.7);
-    }
+/* AQUI VC ARRUMA A ALTURA DA LINHA E POSICIONAMENTO DA ASSINATURA */
+.back-sign-line {
+  width: 220px;
+  height: 1px;
+  background-color: rgba(51,51,51,0.5);
+  margin-bottom: 3px;
+  margin-top: 80px; /* Ajuste este valor para mover a linha para baixo */
+}
+.back-responsible {
+  font-weight: 600;
+  color: var(--dark-blue);
+  text-align: right;
+}
+.back-position,
+.back-id {
+  font-weight: 400;
+  color: rgba(51,51,51,0.7);
+}
 
-    /* Responsável: linha + container + imagem arrastável */
-    .responsavel-container {
-      position: relative;
-      width: 220px; 
-      height: 40px; 
-      margin-bottom: 3px; /* a mesma "distância" da back-sign-line */
-    }
-    .responsavel-sign {
-      display: none;
-      position: absolute;
-      left: 50%;
-      top: 0; 
-      transform: translate(-50%, -10px);
-      max-width: 200px;
-      max-height: 80px;
-      cursor: move;
-      z-index: 10;
-    }
+/* Assinatura do Responsável Técnico no verso (arrastável também) */
+.responsavel-signature {
+  position: relative;
+  width: 220px; /* mesma largura da .back-sign-line */
+  margin-bottom: 5px;
+  top: -40px; /* Ajuste este valor para posicionar a assinatura em relação à linha */
+}
+.responsavel-signature img {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 0; /* Posiciona próximo à linha */
+  transform: translateX(-50%);
+  max-width: 180px;
+  max-height: 70px;
+  cursor: move;
+  z-index: 10;
+}
 
-    /* Edição (contenteditable) */
-    [contenteditable="true"] {
-      outline: none;
-      transition: background-color 0.3s ease;
-    }
-    [contenteditable="true"]:hover {
-      background-color: rgba(83,99,212,0.1);
-    }
-    [contenteditable="true"]:focus {
-      background-color: rgba(83,99,212,0.15);
-    }
+/* Editáveis + highlight ao focar */
+[contenteditable="true"] {
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+[contenteditable="true"]:hover {
+  background-color: rgba(83,99,212,0.1);
+}
+[contenteditable="true"]:focus {
+  background-color: rgba(83,99,212,0.15);
+}
 
-    @media print {
-      [contenteditable="true"]:hover,
-      [contenteditable="true"]:focus {
-        background-color: transparent;
-      }
-    }
+@media print {
+  [contenteditable="true"]:hover,
+  [contenteditable="true"]:focus {
+    background-color: transparent;
+  }
+}
   </style>
 </head>
 <body>
-  <!-- CONTROLES -->
+  <!-- BOTÕES DE CONTROLE -->
   <div class="controls">
     <button class="btn" id="logoButton">Alterar Logo</button>
-    <button class="btn" id="signFormandoButton">Ass. Formando</button>
-    <button class="btn" id="signInstrutorButton">Ass. Instrutor</button>
-    <button class="btn" id="signResponsavelButton">Ass. Responsável</button>
+    <button class="btn" id="signFormandoButton">Assinatura do Formando</button>
+    <button class="btn" id="signInstrutorButton">Assinatura do Instrutor</button>
+    <button class="btn" id="signResponsavelButton">Ass. Responsável Técnico</button>
     <button class="btn" id="pdfButton">Salvar em PDF</button>
     <button class="btn" onclick="window.location.reload()">Novo Certificado</button>
 
-    <!-- Inputs de arquivo ocultos -->
-    <input type="file" id="logoInput" class="file-input" accept="image/*">
-    <input type="file" id="signFormandoInput" class="file-input" accept="image/*">
-    <input type="file" id="signInstrutorInput" class="file-input" accept="image/*">
-    <input type="file" id="signResponsavelInput" class="file-input" accept="image/*">
+    <!-- Inputs ocultos -->
+    <input type="file" id="logoInput" class="file-input" accept="image/*" />
+    <input type="file" id="signFormandoInput" class="file-input" accept="image/*" />
+    <input type="file" id="signInstrutorInput" class="file-input" accept="image/*" />
+    <input type="file" id="signResponsavelInput" class="file-input" accept="image/*" />
   </div>
 
   <!-- FRENTE -->
@@ -453,7 +458,7 @@
     <div class="front-content">
       <div class="front-header">
         <div class="logo-container">
-          <img id="logo-img" class="logo-img" src="logo.png" alt="Logo">
+          <img id="logo-img" class="logo-img" src="logo.png" alt="Logo" />
         </div>
         <div class="cert-number" id="certNumber" contenteditable="true">Nº 359 PR</div>
       </div>
@@ -479,19 +484,23 @@
         <span class="highlight" id="certNumberMid">Nº 359 PR</span>
       </div>
 
-      <div class="front-validity-note" contenteditable="true">Validade de 1 ano. Sujeito a reciclagem.</div>
+      <div class="front-validity-note" contenteditable="true">
+        Validade de 1 ano. Sujeito a reciclagem.
+      </div>
 
-      <!-- Assinaturas - Formando / Instrutor -->
+      <!-- Assinaturas - Frente -->
       <div class="front-signatures">
+        <!-- Formando -->
         <div class="signature">
-          <img class="sign-image" id="signFormandoImg" alt="Assinatura Formando">
+          <img class="sign-image" id="signFormandoImg" alt="Ass. Formando" />
           <div class="sign-line"></div>
           <div class="signer-name" id="alunoSignatureName" contenteditable="true">Luis Henrique Nunes Vieira</div>
           <div class="signer-title" contenteditable="true">Aluno</div>
           <div class="signer-details" contenteditable="true">IRATA2/00000</div>
         </div>
+        <!-- Instrutor -->
         <div class="signature">
-          <img class="sign-image" id="signInstrutorImg" alt="Assinatura Instrutor">
+          <img class="sign-image" id="signInstrutorImg" alt="Ass. Instrutor" />
           <div class="sign-line"></div>
           <div class="signer-name" contenteditable="true">Mailson Ezequiel Vieira</div>
           <div class="signer-title" contenteditable="true">Instrutor</div>
@@ -524,14 +533,14 @@
           </tr>
         </thead>
         <tbody>
-          <!-- ... Tabela minimal ... -->
+          <!-- Tabela minimal, editável -->
           <tr>
             <td rowspan="2" contenteditable="true">04 Horas</td>
             <td contenteditable="true">
               <ul>
                 <li>Normas e regulamentos aplicáveis ao trabalho</li>
                 <li>Procedimentos internos para trabalhos em altura</li>
-                <li>Análise de risco e PT</li>
+                <li>Análise de risco e PT para altura</li>
               </ul>
             </td>
             <td contenteditable="true">
@@ -563,55 +572,114 @@
               </ul>
             </td>
           </tr>
-          <!-- etc. Você pode repetir e editar conforme desejar. -->
+          <!-- etc... -->
+          <tr>
+            <td rowspan="2" contenteditable="true">04 Horas</td>
+            <td contenteditable="true">
+              <ul>
+                <li>Nós e voltas</li>
+                <li>Sistemas de proteção coletiva</li>
+                <li>EPIs em altura</li>
+              </ul>
+            </td>
+            <td contenteditable="true">
+              <ul>
+                <li>Teoria e prática de EPCs e EPIs</li>
+              </ul>
+            </td>
+            <td contenteditable="true">
+              <ul>
+                <li>Cordeletes, Mosquetões</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td contenteditable="true">
+              <ul>
+                <li>Acidentes típicos em altura. Condutas de emergência</li>
+              </ul>
+            </td>
+            <td contenteditable="true">
+              <ul>
+                <li>Técnicas de resgate e primeiros socorros</li>
+              </ul>
+            </td>
+            <td contenteditable="true">
+              <ul>
+                <li>Equipamentos de primeiros socorros</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td contenteditable="true"></td>
+            <td contenteditable="true">
+              <ul>
+                <li>Ancoragens</li>
+                <li>Escada de Marinheiro</li>
+                <li>Talabartes</li>
+                <li>Trava quedas</li>
+              </ul>
+            </td>
+            <td contenteditable="true">
+              <ul>
+                <li>Conceitos de ancoragem e aplicação prática</li>
+                <li>Técnica de três apoios</li>
+                <li>Uso correto do trava quedas</li>
+              </ul>
+            </td>
+            <td contenteditable="true">
+              <ul>
+                <li>Local do treinamento prático</li>
+                <li>Tirantes, fitas tubulares</li>
+                <li>Mosquetão, cordas</li>
+                <li>Protetores de corda</li>
+              </ul>
+            </td>
+          </tr>
         </tbody>
       </table>
 
       <div class="back-footer">
+        <!-- Esquerda (Empresa) -->
         <div class="footer-left">
           <div contenteditable="true">Pentagono Alpinismo LTDA.</div>
           <div contenteditable="true">CNPJ: 07.891.475/0001-64</div>
           <div contenteditable="true">Rua: Cascavel, 2143 – CEP: 81750-090 – CURITIBA – PR</div>
         </div>
+
+        <!-- Direita (Responsável Técnico) -->
         <div class="footer-right">
-          <!-- Linha + contêiner p/ assinatura do responsável -->
+          <!-- Linha e container p/ assinatura do Responsável -->
           <div class="back-sign-line"></div>
-          <div class="responsavel-container">
-            <img id="signResponsavelImg" class="responsavel-sign" alt="Assinatura Responsável">
+          <div class="responsavel-signature" id="responsavelSignatureContainer">
+            <img id="signResponsavelImg" alt="Ass. Responsável" />
           </div>
-          
-          <div class="back-responsible" contenteditable="true">
-            Responsável Técnico: Mailson Ezequiel Vieira
-          </div>
-          <div class="back-position" contenteditable="true">
-            Engenheiro Ambiental – Segurança do Trabalho
-          </div>
-          <div class="back-id" contenteditable="true">
-            CREA PR-131512/D / MTB-003412-6
-          </div>
+
+          <div class="back-responsible" contenteditable="true">Responsável Técnico: Mailson Ezequiel Vieira</div>
+          <div class="back-position" contenteditable="true">Engenheiro Ambiental – Segurança do Trabalho</div>
+          <div class="back-id" contenteditable="true">CREA PR-131512/D / MTB-003412-6</div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Data de emissão auto
+    // Ao carregar a página => data de emissão
     window.addEventListener('DOMContentLoaded', () => {
       const hoje = new Date().toLocaleDateString('pt-BR');
       document.getElementById('diaEmissao').textContent = hoje;
     });
 
-    // Lidar com a logo
+    // Botão logo
     const logoButton = document.getElementById('logoButton');
     const logoInput = document.getElementById('logoInput');
     const logoImg = document.getElementById('logo-img');
-
     logoButton.addEventListener('click', () => {
       logoInput.click();
     });
     logoInput.addEventListener('change', e => {
       const file = e.target.files[0];
-      if(!file) return;
+      if (!file) return;
       const reader = new FileReader();
       reader.onload = () => {
         logoImg.src = reader.result;
@@ -619,21 +687,21 @@
       reader.readAsDataURL(file);
     });
 
-    // Nome do aluno => replicar
+    // Nome do aluno => replicar p/ assinatura
     const frontRecipient = document.getElementById('frontRecipient');
     const alunoSignatureName = document.getElementById('alunoSignatureName');
     frontRecipient.addEventListener('input', () => {
       alunoSignatureName.textContent = frontRecipient.textContent;
     });
 
-    // Nº cert => replicar
+    // Nº do cert => replicar p/ campo do meio
     const certNumberTop = document.getElementById('certNumber');
     const certNumberMid = document.getElementById('certNumberMid');
     certNumberTop.addEventListener('input', () => {
       certNumberMid.textContent = certNumberTop.textContent;
     });
 
-    // ASSINATURAS: Formando, Instrutor, Responsável
+    // Botões e inputs de assinatura (Formando, Instrutor, Responsável)
     const signFormandoButton = document.getElementById('signFormandoButton');
     const signFormandoInput = document.getElementById('signFormandoInput');
     const signFormandoImg = document.getElementById('signFormandoImg');
@@ -646,70 +714,179 @@
     const signResponsavelInput = document.getElementById('signResponsavelInput');
     const signResponsavelImg = document.getElementById('signResponsavelImg');
 
-    // Ao clicar => upload
-    signFormandoButton.addEventListener('click', () => signFormandoInput.click());
-    signInstrutorButton.addEventListener('click', () => signInstrutorInput.click());
-    signResponsavelButton.addEventListener('click', () => signResponsavelInput.click());
-
-    // Ao selecionar arquivo => exibe a imagem
+    // Formando
+    signFormandoButton.addEventListener('click', () => {
+      signFormandoInput.click();
+    });
     signFormandoInput.addEventListener('change', e => {
-      loadSignatureImage(e, signFormandoImg);
-    });
-    signInstrutorInput.addEventListener('change', e => {
-      loadSignatureImage(e, signInstrutorImg);
-    });
-    signResponsavelInput.addEventListener('change', e => {
-      loadSignatureImage(e, signResponsavelImg);
-    });
-
-    function loadSignatureImage(event, imgElement) {
-      const file = event.target.files[0];
+      const file = e.target.files[0];
       if(!file) return;
       const reader = new FileReader();
       reader.onload = () => {
-        imgElement.src = reader.result;
-        imgElement.style.display = 'block';
+        signFormandoImg.src = reader.result;
+        signFormandoImg.style.display = 'block';
       };
       reader.readAsDataURL(file);
+    });
+
+    // Instrutor
+    signInstrutorButton.addEventListener('click', () => {
+      signInstrutorInput.click();
+    });
+    signInstrutorInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        signInstrutorImg.src = reader.result;
+        signInstrutorImg.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Responsável técnico (no verso)
+    signResponsavelButton.addEventListener('click', () => {
+      signResponsavelInput.click();
+    });
+    signResponsavelInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        signResponsavelImg.src = reader.result;
+        signResponsavelImg.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Função para tornar a imagem arrastável (drag-and-drop manual)
+// Função melhorada para arrastar as assinaturas
+function makeImageDraggable(img) {
+  // Garantir que a imagem está configurada para ser arrastável
+  img.style.position = 'absolute'; // Importante: Posicionamento absoluto
+  img.style.cursor = 'move';       // Cursor de mão ao passar por cima
+  img.style.zIndex = '100';        // Manter acima de outros elementos
+
+  let isDragging = false;
+  let startX, startY;
+  let startLeft, startTop;
+
+  // Ao pressionar o mouse na imagem
+  img.addEventListener('mousedown', function(e) {
+    e.preventDefault(); // Prevenir comportamento padrão
+    
+    // Registrar posição inicial do mouse
+    startX = e.clientX;
+    startY = e.clientY;
+    
+    // Obter posição atual da imagem (como número)
+    const style = window.getComputedStyle(img);
+    startLeft = parseInt(style.left) || 0;
+    startTop = parseInt(style.top) || 0;
+    
+    // Começar arrasto
+    isDragging = true;
+    
+    // Destaque visual opcional quando arrastando
+    img.style.opacity = '0.8';
+  });
+
+  // Ao mover o mouse depois de clicar
+  document.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    
+    // Calcular movimento do mouse desde o clique inicial
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+    
+    // Aplicar o novo posicionamento relativo à posição inicial
+    img.style.left = (startLeft + deltaX) + 'px';
+    img.style.top = (startTop + deltaY) + 'px';
+    
+    // Garantir que estas propriedades não interferem
+    img.style.bottom = 'auto';
+    img.style.transform = 'none';
+  });
+
+  // Quando soltar o botão do mouse
+  document.addEventListener('mouseup', function() {
+    if (!isDragging) return;
+    
+    // Parar de arrastar
+    isDragging = false;
+    
+    // Restaurar opacidade normal
+    img.style.opacity = '1';
+  });
+
+  // Também precisamos parar de arrastar se o mouse sair da janela
+  document.addEventListener('mouseleave', function() {
+    if (isDragging) {
+      isDragging = false;
+      img.style.opacity = '1';
     }
+  });
+}
 
-    // Função para tornar imagem arrastável
-    function makeDraggable(img) {
-      let isDragging = false;
-      let offsetX = 0, offsetY = 0;
+// Modificar a função de carregamento de assinatura do aluno
+function setupSignatureImage(inputElement, imgElement) {
+  inputElement.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      // Definir posição padrão (centralizada) ao carregar
+      imgElement.style.position = 'absolute';
+      imgElement.style.display = 'block';
+      imgElement.style.left = '50%';        // Centralizar horizontalmente
+ 
+      imgElement.style.transform = 'translateX(-50%)'; // Ajuste fino da centralização
+      
+      // Carregar a imagem
+      imgElement.src = reader.result;
+      
+      // Aplicar função de arrasto
+      makeImageDraggable(imgElement);
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
-      img.addEventListener('mousedown', e => {
-        e.preventDefault();
-        isDragging = true;
-        offsetX = e.offsetX;
-        offsetY = e.offsetY;
-      });
-      document.addEventListener('mousemove', e => {
-        if(!isDragging) return;
-        // Posição absoluta no documento
-        const x = e.pageX - offsetX;
-        const y = e.pageY - offsetY;
-        img.style.left = x + 'px';
-        img.style.top = y + 'px';
-        // Remover transform do CSS inicial
-        img.style.transform = 'none';
-      });
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-    }
+// Uso das funções melhoradas:
+document.addEventListener('DOMContentLoaded', () => {
+  // Para assinatura do formando
+  setupSignatureImage(
+    document.getElementById('signFormandoInput'),
+    document.getElementById('signFormandoImg')
+  );
+  
+  // Para assinatura do instrutor
+  setupSignatureImage(
+    document.getElementById('signInstrutorInput'),
+    document.getElementById('signInstrutorImg')
+  );
+  
+  // Para assinatura do responsável técnico
+  setupSignatureImage(
+    document.getElementById('signResponsavelInput'),
+    document.getElementById('signResponsavelImg')
+  );
+});
 
-    // Torna as imagens arrastáveis
-    makeDraggable(signFormandoImg);
-    makeDraggable(signInstrutorImg);
-    makeDraggable(signResponsavelImg);
+    // Tornar todas as imagens de assinatura arrastáveis
+    makeImageDraggable(signFormandoImg);
+    makeImageDraggable(signInstrutorImg);
+    makeImageDraggable(signResponsavelImg);
 
-    // Geração de PDF
-    document.getElementById('pdfButton').addEventListener('click', async () => {
+    // Geração de PDF (frente + verso)
+    const pdfButton = document.getElementById('pdfButton');
+    pdfButton.addEventListener('click', async () => {
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: 'a4' });
 
       async function captureAsImage(element) {
+        // scale=2 => boa nitidez
         const canvas = await html2canvas(element, { scale: 2 });
         return canvas.toDataURL('image/png');
       }
@@ -717,18 +894,18 @@
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
 
-      // Frente
+      // Capturar frente
       const frenteDiv = document.getElementById('frente');
       const frenteImg = await captureAsImage(frenteDiv);
       pdf.addImage(frenteImg, 'PNG', 0, 0, pageWidth, pageHeight);
 
-      // Verso
+      // Capturar verso
       pdf.addPage();
       const versoDiv = document.getElementById('verso');
       const versoImg = await captureAsImage(versoDiv);
       pdf.addImage(versoImg, 'PNG', 0, 0, pageWidth, pageHeight);
 
-      pdf.save('Certificado-Final.pdf');
+      pdf.save('Certificado-Assinaturas-Flutuantes-Ajustado.pdf');
     });
   </script>
 </body>
